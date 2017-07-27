@@ -1,14 +1,21 @@
 package com.emag.steps;
 
+import com.emag.pages.ViewCartPage;
 import com.emag.pages.EmagHomePage;
-import com.emag.pages.SearchResultsList;
-
+import com.emag.pages.SearchResultsPage;
+import com.emag.pages.ViewProductPage;
+import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
+import org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 public class EmagSteps {
 	
 	EmagHomePage emagHomePage;
-	SearchResultsList searchResultsList;
+	SearchResultsPage searchResultsPage;
+	ViewProductPage viewProductPage;
+	ViewCartPage cartPage;
 	
 	@Step
 	public void navigateTo(String url){
@@ -22,6 +29,28 @@ public class EmagSteps {
 	
 	@Step
 	public void navigateToRandomResultsPage(String keyword){
-		searchResultsList.redirectToRandomProductsList(keyword);
+		searchResultsPage.redirectToRandomPageList(keyword);
+	}
+
+	@Step
+	public void clickRandomProduct(){
+		searchResultsPage.redirectToRandomProductList();
+	}
+
+	@Step
+	public void setProductTitleAndClickAddToCartOnRandomProduct(){
+		viewProductPage.setProductTitleAndClickAddToCartOnRandomProduct();
+	}
+
+	@Step
+	public void submitViewCartDetailsButtonAndSetProductTitleFromCart(){
+		cartPage.submitViewCartDetailsButtonAndSetProductTitleFromCart();
+	}
+
+	@Step
+	public void checkByTitleIfProductIsInCart() {
+		String productTitle = Serenity.sessionVariableCalled("title").toString();
+		String cartProductTitle = Serenity.sessionVariableCalled("cartProductTitle").toString();
+		assertEquals(productTitle, cartProductTitle);
 	}
 }
