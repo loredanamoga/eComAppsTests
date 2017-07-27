@@ -57,6 +57,7 @@ public class MadisonSteps {
     public void checkWordInFirstAndLastResultedProduct(){
         assertTrue("The searched word doesn't appear in the first product from result list",searchResultsPage.checkWordInFirstResultedProductFromFirstPage());
         assertTrue("The searched word doesn't appear in the last product from result list ",searchResultsPage.checkWordInLastResultedProduct());
+        assertTrue("The searched word doesn't appear in a random product from result list", searchResultsPage.checkWordInRandomResultedProduct());
     }
 
 

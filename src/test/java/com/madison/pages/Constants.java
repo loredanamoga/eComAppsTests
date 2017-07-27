@@ -5,5 +5,6 @@ package com.madison.pages;
  */
 public class Constants {
 
-    public static final String SEARCHED_WORD = "two";
+    public static  String SEARCHED_WORD;
+    public static final String CSV_FILES_PATH = "csv/";
 }
