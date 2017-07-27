@@ -3,7 +3,6 @@ package com.madison.tests;
 import com.madison.pages.Constants;
 import com.madison.steps.MadisonSteps;
 import net.serenitybdd.junit.runners.SerenityParameterizedRunner;
-import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Managed;
 import net.thucydides.core.annotations.Pending;
 import net.thucydides.core.annotations.Steps;
@@ -37,12 +36,12 @@ public class MadisonTest {
 
 
     @Test
-    public void madisonSearchSpecificProductInResultPages(){
+    public void searchSpecificProductInResultPages(){
 
 
         madisonSteps.navigateTo("http://qa1.madison.com/");
         madisonSteps.searchInput(Constants.SEARCHED_WORD);
-        madisonSteps.checkWordInFirstAndLastResultedProduct();
+        madisonSteps.verifyWordInResultPages();
 
     }
 

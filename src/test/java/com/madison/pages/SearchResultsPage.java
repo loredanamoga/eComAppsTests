@@ -27,42 +27,50 @@ public class SearchResultsPage extends PageObject {
     private Random randomGenerator = new Random();
 
 
-    public boolean checkWordInFirstResultedProductFromFirstPage() {
+    //check first product from first page
+    public boolean checkWordInFirstProduct() {
 
         productsList.get(0).click();
         return verifyProductIfContainsSpecificWord();
     }
 
-    public boolean checkWordInLastResultedProductFromFirstPage() {
+    //check last product from first page
+    public boolean checkWordInLastProduct() {
 
         productsList.get(productsList.size() - 1).click();
         return verifyProductIfContainsSpecificWord();
     }
 
-    public boolean checkWordInLastResultedProduct() {
+    public boolean checkIfAreMoreProductsInPage(){
+        if (productsList.size() > 1)return true;
+        return false;
+    }
 
+    
+
+    public boolean checkWordInLastResultedProduct() {
         getDriver().navigate().back();
-        if (productsList.size() > 1) {
+        if (checkIfAreMoreProductsInPage()) {
             try {
                 if (resultPages.isDisplayed()) {
                     noOfPagesList.get(noOfPagesList.size() - 2).click();
-                    return checkWordInLastResultedProductFromFirstPage();
+                    return checkWordInLastProduct();
                 }
             } catch (Exception e) {
             }
         }
-        return checkWordInLastResultedProductFromFirstPage();
+        return checkWordInLastProduct();
 
     }
 
     public boolean checkWordInRandomResultedProduct() {
         getDriver().navigate().back();
-        if (productsList.size() > 1) {
+        if (checkIfAreMoreProductsInPage()) {
             try {
                 if (resultPages.isDisplayed()) {
                     int indexPage = Math.abs(randomGenerator.nextInt(noOfPagesList.size()));
                     noOfPagesList.get(indexPage).click();
-                    return checkWordInLastResultedProductFromFirstPage();
+                    return checkWordInLastProduct();
 
                 }
             } catch (Exception e) {
@@ -70,10 +78,7 @@ public class SearchResultsPage extends PageObject {
 
             }
         }
-
-//        int indexProduct = Math.abs(randomGenerator.nextInt(productsList.size()));
-//        productsList.get(indexProduct).click();
-        return true;//verifyProductIfContainsSpecificWord();
+        return true;
 
     }
 
@@ -84,17 +89,31 @@ public class SearchResultsPage extends PageObject {
         String productTitle = Serenity.sessionVariableCalled("productTitle").toString();
         String productDescription = Serenity.sessionVariableCalled("productDescription").toString();
         String productShortDescription = Serenity.sessionVariableCalled("productShortDescription").toString();
-
-        if (productTitle.toLowerCase().contains(Constants.SEARCHED_WORD)) {
+        if(checkWordInTitle(productTitle)|| checkWordInDescription(productDescription)||checkWordInShortDescription(productShortDescription)){
             return true;
-        } else if (productDescription.toLowerCase().contains(Constants.SEARCHED_WORD)) {
-            return true;
-        } else if (productShortDescription.toLowerCase().contains(Constants.SEARCHED_WORD)) {
-            return true;
-        } else {
-            return false;
         }
+       return false;
 
+    }
+
+    public boolean checkWordInTitle(String productTitle){
+        if (productTitle.toLowerCase().contains(Constants.SEARCHED_WORD)) {
+            return true;}
+            else return false;
+
+    }
+
+    public boolean checkWordInDescription(String productDescription){
+        if (productDescription.toLowerCase().contains(Constants.SEARCHED_WORD)) {
+            return true;}
+            else return false;
+
+    }
+
+    public boolean checkWordInShortDescription(String productShortDescription){
+        if (productShortDescription.toLowerCase().contains(Constants.SEARCHED_WORD)) {
+        return true;}
+        else return false;
     }
 
 

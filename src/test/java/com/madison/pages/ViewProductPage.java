@@ -40,7 +40,7 @@ public class ViewProductPage extends PageObject {
 
     }
 
-    @StepGroup
+
     public void setProductTitleAndDescriptions(){
         setProductTitle();
         setProductDescription();
