@@ -4,6 +4,7 @@ import com.madison.pages.Constants;
 import com.madison.steps.MadisonSteps;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Managed;
+import net.thucydides.core.annotations.Pending;
 import net.thucydides.core.annotations.Steps;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,38 +31,32 @@ public class MadisonTest {
         driver.manage().window().maximize();
     }
 
+
     @Test
     public void madisonSearchSpecificProductInResultPages(){
 
 
         madisonSteps.navigateTo("http://qa1.madison.com/");
-
-        //if we enter nothing
-//        madisonSteps.searchInput("");
-//        madisonSteps.verifyCurrentUrlWithHomePageUrl();
-//
-//        //if we enter a blank space
-//        madisonSteps.searchInput(" ");
-//        madisonSteps.verifyCurrentUrlWithHomePageUrl();
-
-
-        //search random product
-//        madisonSteps.redirectToRandomCategAndSubcateg();
-//        madisonSteps.redirectToRandomProduct();
-
-        //set random product's title
-//        madisonSteps.setProductTitleAndDescriptions();
-
         madisonSteps.searchInput(constants.SEARCHED_WORD);
-
-      //  madisonSteps.checkByTitleIfProductIsInResultPage();
-//        madisonSteps.checkByDescriptionIfProductIsInResultPage();
-        
-        madisonSteps.checkWordInResultedProductsFromFirstPage();
+        madisonSteps.checkWordInFirstAndLastResultedProduct();
 
     }
 
 
+    @Pending
+    @Test
+    public void madisonSearchByBlankSpace(){
 
+        madisonSteps.searchInput(" ");
+        madisonSteps.verifyCurrentUrlWithHomePageUrl();
+    }
+
+
+    @Pending
+    @Test
+    public void madisonSearchByAddingNoWord(){
+        madisonSteps.searchInput("");
+        madisonSteps.verifyCurrentUrlWithHomePageUrl();
+    }
 
 }

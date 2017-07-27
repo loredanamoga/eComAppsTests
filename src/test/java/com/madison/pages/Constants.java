@@ -5,5 +5,5 @@ package com.madison.pages;
  */
 public class Constants {
 
-    public static final String SEARCHED_WORD = "hat";
+    public static final String SEARCHED_WORD = "two";
 }

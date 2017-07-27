@@ -15,7 +15,6 @@ public class MadisonSteps {
     MadisonHomePage madisonHomePage;
     RandomSearchPage randomSearchPage;
     ViewProductPage viewProductPage;
-    ResultsPage resultsPage;
     SearchResultsPage searchResultsPage;
 
 
@@ -53,24 +52,11 @@ public class MadisonSteps {
         viewProductPage.setProductTitleAndDescriptions();
     }
 
-    @Step
-    public void checkByTitleIfProductIsInResultPage(){
-        assertTrue(resultsPage.checkByTitleIfProductIsInResultPage());
-    }
 
     @Step
-    public void checkByDescriptionIfProductIsInResultPage() {
-        assertTrue(resultsPage.checkByDescriptionIfProductIsInResultPage());
-    }
-//    @Step
-//    public void checkIfProductIsInResultPage(){
-//        assertTrue(randomSearchPage.checkIfProductIsInResultPage());
-//    }
-
-    @Step
-    public void checkWordInResultedProductsFromFirstPage(){
-        assertTrue(searchResultsPage.checkWordInFirstResultedProductsFromFirstPage());
-        assertTrue(searchResultsPage.checkWordInLastResultedProductFromFirstPage());
+    public void checkWordInFirstAndLastResultedProduct(){
+        assertTrue("The searched word doesn't appear in the first product from result list",searchResultsPage.checkWordInFirstResultedProductFromFirstPage());
+        assertTrue("The searched word doesn't appear in the last product from result list ",searchResultsPage.checkWordInLastResultedProduct());
     }
 
 
