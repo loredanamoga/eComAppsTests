@@ -21,32 +21,43 @@ public class ViewProductPage extends PageObject {
     private WebElement productDescription;
 
 
-    public void setProductTitle() {
+    public void takeProductTitle() {
         waitFor(productTitle);
         Serenity.setSessionVariable("productTitle").to(productTitle.getText());
         System.out.println(productTitle.getText());
     }
 
-    public void setProductShortDescription() {
+    public void takeProductShortDescription() {
         waitFor(productShortDescription);
         Serenity.setSessionVariable("productShortDescription").to(productShortDescription.getText());
         System.out.println(productShortDescription.getText());
     }
 
-    public void setProductDescription(){
+    public void takeProductDescription(){
         waitFor(productDescription);
         Serenity.setSessionVariable("productDescription").to(productDescription.getText());
         System.out.println(productDescription.getText());
-
     }
 
-
-    public void setProductTitleAndDescriptions(){
-        setProductTitle();
-        setProductDescription();
-        setProductShortDescription();
+    //search specific word in title, description and short description
+    public boolean verifyProductIfContainsSpecificWord(String searchTerm) {
+        return (checkIfContainsWord(productTitle.getText(),searchTerm) || checkIfContainsWord(productDescription.
+                getText(),searchTerm) || checkIfContainsWord(productShortDescription.getText(),searchTerm));
     }
 
+    public void navigateToPreviousPage() {
+        getDriver().navigate().back();
+    }
+
+    public boolean verifyProductIfContainsSpecificWordAndGoBack(String searchTerm) {
+        Boolean flag = verifyProductIfContainsSpecificWord(searchTerm);
+        navigateToPreviousPage();
+        return flag;
+    }
+
+    private boolean checkIfContainsWord(String productToSearchIn, String searchTerm) {
+        return productToSearchIn.toLowerCase().contains(searchTerm);
+    }
 
 
 }

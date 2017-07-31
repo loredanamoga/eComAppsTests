@@ -34,32 +34,35 @@ public class MadisonTest {
         Constants.SEARCHED_WORD = keyword;
     }
 
-
+    @Pending
     @Test
     public void searchSpecificProductInResultPages(){
 
 
         madisonSteps.navigateTo("http://qa1.madison.com/");
         madisonSteps.searchInput(Constants.SEARCHED_WORD);
-        madisonSteps.verifyWordInResultPages();
+        madisonSteps.ckeckFirstLastRandomIfRelevant(Constants.SEARCHED_WORD);
 
     }
 
+//    @Test
+//    public void madisonSearchByBlankSpace(){
+//
+//        madisonSteps.searchInput(" ");
+//        madisonSteps.verifyCurrentUrlWithHomePageUrl();
+//    }
 
-    @Pending
+//    @Test
+//    public void madisonSearchByAddingNoWord(){
+//        madisonSteps.searchInput("");
+//        madisonSteps.verifyCurrentUrlWithHomePageUrl();
+//    }
+
     @Test
-    public void madisonSearchByBlankSpace(){
-
-        madisonSteps.searchInput(" ");
-        madisonSteps.verifyCurrentUrlWithHomePageUrl();
-    }
-
-
-    @Pending
-    @Test
-    public void madisonSearchByAddingNoWord(){
-        madisonSteps.searchInput("");
-        madisonSteps.verifyCurrentUrlWithHomePageUrl();
+    public void testIfThereAreNoResults(){
+        madisonSteps.navigateTo("http://qa1.madison.com/");
+        madisonSteps.searchInput("hfkjushfkjudhasfkjhds");
+        madisonSteps.checkIfResultsPageIsEmpty();
     }
 
 }

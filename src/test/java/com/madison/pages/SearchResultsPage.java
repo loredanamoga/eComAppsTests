@@ -1,6 +1,7 @@
 package com.madison.pages;
 
 import net.serenitybdd.core.Serenity;
+import net.serenitybdd.core.annotations.findby.By;
 import net.serenitybdd.core.annotations.findby.FindBy;
 import net.thucydides.core.pages.PageObject;
 import org.openqa.selenium.WebElement;
@@ -22,99 +23,104 @@ public class SearchResultsPage extends PageObject {
     @FindBy(css = ".category-products > div:not(.toolbar-bottom) .pages>ol a")
     private List<WebElement> noOfPagesList;
 
+    @FindBy(css = ".amount--has-pages")
+    private List<WebElement> amountOfProducts1;
 
-    ViewProductPage viewProductPage;
-    private Random randomGenerator = new Random();
+    @FindBy(css = ".amount--no-pages strong")
+    private List<WebElement> amountOfProducts2;
 
+    @FindBy(css = ".limiter option[selected='selected']")
+    private WebElement limitPerPage;
 
-    //check first product from first page
-    public boolean checkWordInFirstProduct() {
-
-        productsList.get(0).click();
-        return verifyProductIfContainsSpecificWord();
+    public void clickOnProduct(int productIndex) {
+        // TODO when there are not search results
+        productsList.get(productIndex).findElement(By.cssSelector("a")).click();
     }
 
-    //check last product from first page
-    public boolean checkWordInLastProduct() {
-
-        productsList.get(productsList.size() - 1).click();
-        return verifyProductIfContainsSpecificWord();
+    public void clickOnFirstProduct() {
+        clickOnProduct(0);
     }
 
-    public boolean checkIfAreMoreProductsInPage(){
-        if (productsList.size() > 1)return true;
-        return false;
+    public void clickOnLastProduct() {
+        clickOnProduct(productsList.size() - 1);
     }
 
-    
+    public void clickOnRandomProduct() {
+        Random random = new Random();
+        Integer productNr = Math.abs(random.nextInt(productsList.size()));
+        //setProductTitleInSession(productsList.get(productNr).findElement(By.cssSelector(".product-name > a")).getAttribute("title"));
+        clickOnProduct(productNr);
+    }
 
-    public boolean checkWordInLastResultedProduct() {
-        getDriver().navigate().back();
-        if (checkIfAreMoreProductsInPage()) {
-            try {
-                if (resultPages.isDisplayed()) {
-                    noOfPagesList.get(noOfPagesList.size() - 2).click();
-                    return checkWordInLastProduct();
-                }
-            } catch (Exception e) {
-            }
+    public void setAmountOfProductsInSession() {
+        if(amountOfProducts1.size() > 0) {
+            Serenity.setSessionVariable("amountOfProducts1").to(amountOfProducts1.get(0)
+                    .getText().split(" ")[2]);
+        } else {
+            Serenity.setSessionVariable("amountOfProducts1").to(amountOfProducts2.get(0)
+                    .getText().split(" ")[0]);
         }
-        return checkWordInLastProduct();
-
     }
 
-    public boolean checkWordInRandomResultedProduct() {
-        getDriver().navigate().back();
-        if (checkIfAreMoreProductsInPage()) {
-            try {
-                if (resultPages.isDisplayed()) {
-                    int indexPage = Math.abs(randomGenerator.nextInt(noOfPagesList.size()));
-                    noOfPagesList.get(indexPage).click();
-                    return checkWordInLastProduct();
+    public void setLimitPerPageInSession() {
+        Serenity.setSessionVariable("limitPerPage").to(limitPerPage.getText()
+                .replace(" ", ""));
+    }
 
-                }
-            } catch (Exception e) {
-
-
-            }
+    public Integer getNumberOfResultPages() {
+        setAmountOfProductsInSession();
+        setLimitPerPageInSession();
+        Integer productNumber = Integer.parseInt(Serenity.sessionVariableCalled("amountOfProducts1").toString());
+        Integer limitNumber = Integer.parseInt(Serenity.sessionVariableCalled("limitPerPage").toString());
+        if (productNumber % limitNumber != 0) {
+            return productNumber / limitNumber + 1;
         }
-        return true;
-
+        return productNumber / limitNumber;
     }
 
-    //search specific word in title, description and short description
-    public boolean verifyProductIfContainsSpecificWord() {
-
-        viewProductPage.setProductTitleAndDescriptions();
-        String productTitle = Serenity.sessionVariableCalled("productTitle").toString();
-        String productDescription = Serenity.sessionVariableCalled("productDescription").toString();
-        String productShortDescription = Serenity.sessionVariableCalled("productShortDescription").toString();
-        if(checkWordInTitle(productTitle)|| checkWordInDescription(productDescription)||checkWordInShortDescription(productShortDescription)){
-            return true;
+    public void navigateToLastResultPage(String searchedTerm) {
+        if (getNumberOfResultPages() > 1) {
+            navigateToResultPage(searchedTerm, getNumberOfResultPages());
         }
-       return false;
-
     }
 
-    public boolean checkWordInTitle(String productTitle){
-        if (productTitle.toLowerCase().contains(Constants.SEARCHED_WORD)) {
-            return true;}
-            else return false;
-
+    public void navigateToRandomResultPage(String searchedTerm) {
+        navigateToResultPage(searchedTerm, Math.abs(new Random().nextInt(getNumberOfResultPages() + 1)));
     }
 
-    public boolean checkWordInDescription(String productDescription){
-        if (productDescription.toLowerCase().contains(Constants.SEARCHED_WORD)) {
-            return true;}
-            else return false;
-
+    public void navigateToResultPage(String searchedTerm, Integer pageNr) {
+        getDriver().get("http://qa1.madison.com/catalogsearch/result/index/?p="
+                + pageNr + "&q=" + searchedTerm);
     }
 
-    public boolean checkWordInShortDescription(String productShortDescription){
-        if (productShortDescription.toLowerCase().contains(Constants.SEARCHED_WORD)) {
-        return true;}
-        else return false;
+    public boolean checkIfProductsListIsEmpty() {
+        return productsList.size() < 1;
     }
 
 
+//    public boolean checkWordInLastResultedProduct() {
+//        //remove navigate back .
+//        getDriver().navigate().back();
+//        if (checkIfAreMoreProductsInPage() && resultPages.isDisplayed()) {
+//            noOfPagesList.get(noOfPagesList.size() - 2).click();
+//            return checkWordInLastProduct();
+//        }
+//        return checkWordInLastProduct();
+//
+//    }
+//
+//    public boolean checkWordInRandomProduct() {
+//        //remove navigate back ...
+//        getDriver().navigate().back();
+//        if (checkIfAreMoreProductsInPage() && resultPages.isDisplayed()) {
+//
+//            int indexPage = Math.abs(randomGenerator.nextInt(noOfPagesList.size()));
+//            noOfPagesList.get(indexPage).click();
+//            return checkWordInLastProduct();
+//
+//        }
+//
+//        return false;
+//
+//    }
 }
